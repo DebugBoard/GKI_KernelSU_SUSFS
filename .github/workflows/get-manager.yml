@@ -92,6 +92,10 @@ jobs:
           if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
             DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
           elif [ "${{ inputs.kernelsu_variant }}" == "SukiSU" ]; then
+            DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("ksud-aarch64-linux-android")) | .archive_download_url')
+          elif [ "${{ inputs.kernelsu_variant }}" == "Official" ]; then
+            DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
+          elif [ "${{ inputs.kernelsu_variant }}" == "MKSU" ]; then
             DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
           fi
           
@@ -109,6 +113,14 @@ jobs:
           if curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip" "$DOWNLOAD_URL"; then
             echo "Manager 文件已下载为：${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip"
             unzip *.zip
+            
+            # 对于SukiSU，重命名二进制文件为APK格式以保持一致性
+            if [ "${{ inputs.kernelsu_variant }}" == "SukiSU" ]; then
+              if [ -f "ksud" ]; then
+                mv ksud "SukiSU-Manager-${{ env.KSU_VERSION }}.apk"
+                echo "SukiSU ksud binary renamed to APK format for consistency"
+              fi
+            fi
           else
             echo "错误: 下载Manager文件失败"
             exit 1
