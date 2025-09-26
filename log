@@ -1,0 +1,531 @@
+
+1s
+Run if [ "SukiSU" == "Next" ]; then
+SukiSU...
+使用仓库: SukiSU-Ultra/SukiSU-Ultra
+工作流文件: build-manager.yml
+BUILD_ID=18043698084
+ARTIFACTS={
+  "total_count": 12,
+  "artifacts": [
+    {
+      "id": 4117179199,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MTc5MTk5",
+      "name": "android12-5.10-lkm",
+      "size_in_bytes": 50788,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117179199",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117179199/zip",
+      "expired": false,
+      "digest": "sha256:10e1ccd257176a86323b515dfbd0b921ff681dd093f1ff0c502fbcaa3338044f",
+      "created_at": "2025-09-26T16:48:35Z",
+      "updated_at": "2025-09-26T16:48:35Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117222375,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MjIyMzc1",
+      "name": "android13-5.15-lkm",
+      "size_in_bytes": 54319,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117222375",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117222375/zip",
+      "expired": false,
+      "digest": "sha256:928da3369a16ad25264e2f625a21af7c93049e55ee38b93e70a73bc34484788f",
+      "created_at": "2025-09-26T16:53:59Z",
+      "updated_at": "2025-09-26T16:53:59Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117227760,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MjI3NzYw",
+      "name": "android13-5.10-lkm",
+      "size_in_bytes": 50948,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117227760",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117227760/zip",
+      "expired": false,
+      "digest": "sha256:4ba3ad90009b75f23f60faf19309dbcdc2e53cb92c1915d72653403eb851ea56",
+      "created_at": "2025-09-26T16:54:40Z",
+      "updated_at": "2025-09-26T16:54:40Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117284779,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3Mjg0Nzc5",
+      "name": "android14-5.15-lkm",
+      "size_in_bytes": 69906,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117284779",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117284779/zip",
+      "expired": false,
+      "digest": "sha256:d65c31e3569bbce0b290e7377752c4c3a996cb3607b5a511420499fb4a5ea35e",
+      "created_at": "2025-09-26T17:02:01Z",
+      "updated_at": "2025-09-26T17:02:01Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117333145,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzMzMTQ1",
+      "name": "android14-6.1-lkm",
+      "size_in_bytes": 94342,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117333145",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117333145/zip",
+      "expired": false,
+      "digest": "sha256:4adda801a7b95105131f32e36a708a7fc749b2e74b4e68289caf839f416f6b2f",
+      "created_at": "2025-09-26T17:07:29Z",
+      "updated_at": "2025-09-26T17:07:29Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117347376,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzQ3Mzc2",
+      "name": "android15-6.6-lkm",
+      "size_in_bytes": 51801,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117347376",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117347376/zip",
+      "expired": false,
+      "digest": "sha256:0dcb501b0bd5ae47b5ac721c5b38b2acc168fa548cd03f73455efb17c13bb471",
+      "created_at": "2025-09-26T17:09:11Z",
+      "updated_at": "2025-09-26T17:09:11Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117349888,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzQ5ODg4",
+      "name": "susfs-aarch64-linux-android",
+      "size_in_bytes": 2914,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117349888",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117349888/zip",
+      "expired": false,
+      "digest": "sha256:e3ca008e0c6a0820e74221e416fb9c298cb101adc7dee64c70c1a8540bbd1a42",
+      "created_at": "2025-09-26T17:09:28Z",
+      "updated_at": "2025-09-26T17:09:28Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117350205,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzUwMjA1",
+      "name": "kpmmgr-aarch64-linux-android",
+      "size_in_bytes": 2716,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350205",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350205/zip",
+      "expired": false,
+      "digest": "sha256:2a0e06cfcc669b9a3b376428d55da4a3fe620f41af8101e8c39acc18ce3ee4b1",
+      "created_at": "2025-09-26T17:09:31Z",
+      "updated_at": "2025-09-26T17:09:31Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117350966,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzUwOTY2",
+      "name": "userscanner-all-linux-android",
+      "size_in_bytes": 38584,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350966",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350966/zip",
+      "expired": false,
+      "digest": "sha256:9fc804e9f49474f16da0f6615c110d6a8ecd1c1a48c53f399cceeec7530cffec",
+      "created_at": "2025-09-26T17:09:35Z",
+      "updated_at": "2025-09-26T17:09:35Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117366063,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzY2MDYz",
+      "name": "ksud-x86_64-linux-android",
+      "size_in_bytes": 2568869,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117366063",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117366063/zip",
+      "expired": false,
+      "digest": "sha256:ed58f63cf6a61870713f6f5340d5e350f268d8548aba7d71772303f8c845c8db",
+      "created_at": "2025-09-26T17:11:19Z",
+      "updated_at": "2025-09-26T17:11:19Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117367872,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzY3ODcy",
+      "name": "ksud-aarch64-linux-android",
+      "size_in_bytes": 2962751,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117367872",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117367872/zip",
+      "expired": false,
+      "digest": "sha256:1de447ba659d6f3398b8ce6550865153b97b886296577139a99bb162c281a922",
+      "created_at": "2025-09-26T17:11:31Z",
+      "updated_at": "2025-09-26T17:11:31Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117368885,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzY4ODg1",
+      "name": "ksud-armv7-linux-androideabi",
+      "size_in_bytes": 1985278,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117368885",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117368885/zip",
+      "expired": false,
+      "digest": "sha256:3425f52f67ac671d5e9521e1c1912b715e97b5aaaf6c19ae6e29f840062f9d26",
+      "created_at": "2025-09-26T17:11:37Z",
+      "updated_at": "2025-09-26T17:11:37Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    }
+  ]
+}
+错误: 无法获取Manager文件的下载链接
+可用的artifacts:
+android12-5.10-lkm
+android13-5.15-lkm
+android13-5.10-lkm
+android14-5.15-lkm
+android14-6.1-lkm
+android15-6.6-lkm
+susfs-aarch64-linux-android
+kpmmgr-aarch64-linux-android
+userscanner-all-linux-android
+ksud-x86_64-linux-android
+ksud-aarch64-linux-android
+ksud-armv7-linux-androideabi
+Error: Process completed with exit code 1.
+Run if [ "SukiSU" == "Next" ]; then
+SukiSU...
+使用仓库: SukiSU-Ultra/SukiSU-Ultra
+工作流文件: build-manager.yml
+BUILD_ID=18043698084
+ARTIFACTS={
+  "total_count": 12,
+  "artifacts": [
+    {
+      "id": 4117179199,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MTc5MTk5",
+      "name": "android12-5.10-lkm",
+      "size_in_bytes": 50788,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117179199",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117179199/zip",
+      "expired": false,
+      "digest": "sha256:10e1ccd257176a86323b515dfbd0b921ff681dd093f1ff0c502fbcaa3338044f",
+      "created_at": "2025-09-26T16:48:35Z",
+      "updated_at": "2025-09-26T16:48:35Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117222375,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MjIyMzc1",
+      "name": "android13-5.15-lkm",
+      "size_in_bytes": 54319,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117222375",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117222375/zip",
+      "expired": false,
+      "digest": "sha256:928da3369a16ad25264e2f625a21af7c93049e55ee38b93e70a73bc34484788f",
+      "created_at": "2025-09-26T16:53:59Z",
+      "updated_at": "2025-09-26T16:53:59Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117227760,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MjI3NzYw",
+      "name": "android13-5.10-lkm",
+      "size_in_bytes": 50948,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117227760",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117227760/zip",
+      "expired": false,
+      "digest": "sha256:4ba3ad90009b75f23f60faf19309dbcdc2e53cb92c1915d72653403eb851ea56",
+      "created_at": "2025-09-26T16:54:40Z",
+      "updated_at": "2025-09-26T16:54:40Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117284779,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3Mjg0Nzc5",
+      "name": "android14-5.15-lkm",
+      "size_in_bytes": 69906,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117284779",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117284779/zip",
+      "expired": false,
+      "digest": "sha256:d65c31e3569bbce0b290e7377752c4c3a996cb3607b5a511420499fb4a5ea35e",
+      "created_at": "2025-09-26T17:02:01Z",
+      "updated_at": "2025-09-26T17:02:01Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117333145,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzMzMTQ1",
+      "name": "android14-6.1-lkm",
+      "size_in_bytes": 94342,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117333145",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117333145/zip",
+      "expired": false,
+      "digest": "sha256:4adda801a7b95105131f32e36a708a7fc749b2e74b4e68289caf839f416f6b2f",
+      "created_at": "2025-09-26T17:07:29Z",
+      "updated_at": "2025-09-26T17:07:29Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117347376,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzQ3Mzc2",
+      "name": "android15-6.6-lkm",
+      "size_in_bytes": 51801,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117347376",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117347376/zip",
+      "expired": false,
+      "digest": "sha256:0dcb501b0bd5ae47b5ac721c5b38b2acc168fa548cd03f73455efb17c13bb471",
+      "created_at": "2025-09-26T17:09:11Z",
+      "updated_at": "2025-09-26T17:09:11Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117349888,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzQ5ODg4",
+      "name": "susfs-aarch64-linux-android",
+      "size_in_bytes": 2914,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117349888",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117349888/zip",
+      "expired": false,
+      "digest": "sha256:e3ca008e0c6a0820e74221e416fb9c298cb101adc7dee64c70c1a8540bbd1a42",
+      "created_at": "2025-09-26T17:09:28Z",
+      "updated_at": "2025-09-26T17:09:28Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117350205,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzUwMjA1",
+      "name": "kpmmgr-aarch64-linux-android",
+      "size_in_bytes": 2716,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350205",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350205/zip",
+      "expired": false,
+      "digest": "sha256:2a0e06cfcc669b9a3b376428d55da4a3fe620f41af8101e8c39acc18ce3ee4b1",
+      "created_at": "2025-09-26T17:09:31Z",
+      "updated_at": "2025-09-26T17:09:31Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117350966,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzUwOTY2",
+      "name": "userscanner-all-linux-android",
+      "size_in_bytes": 38584,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350966",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117350966/zip",
+      "expired": false,
+      "digest": "sha256:9fc804e9f49474f16da0f6615c110d6a8ecd1c1a48c53f399cceeec7530cffec",
+      "created_at": "2025-09-26T17:09:35Z",
+      "updated_at": "2025-09-26T17:09:35Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117366063,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzY2MDYz",
+      "name": "ksud-x86_64-linux-android",
+      "size_in_bytes": 2568869,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117366063",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117366063/zip",
+      "expired": false,
+      "digest": "sha256:ed58f63cf6a61870713f6f5340d5e350f268d8548aba7d71772303f8c845c8db",
+      "created_at": "2025-09-26T17:11:19Z",
+      "updated_at": "2025-09-26T17:11:19Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117367872,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzY3ODcy",
+      "name": "ksud-aarch64-linux-android",
+      "size_in_bytes": 2962751,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117367872",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117367872/zip",
+      "expired": false,
+      "digest": "sha256:1de447ba659d6f3398b8ce6550865153b97b886296577139a99bb162c281a922",
+      "created_at": "2025-09-26T17:11:31Z",
+      "updated_at": "2025-09-26T17:11:31Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    },
+    {
+      "id": 4117368885,
+      "node_id": "MDg6QXJ0aWZhY3Q0MTE3MzY4ODg1",
+      "name": "ksud-armv7-linux-androideabi",
+      "size_in_bytes": 1985278,
+      "url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117368885",
+      "archive_download_url": "https://api.github.com/repos/SukiSU-Ultra/SukiSU-Ultra/actions/artifacts/4117368885/zip",
+      "expired": false,
+      "digest": "sha256:3425f52f67ac671d5e9521e1c1912b715e97b5aaaf6c19ae6e29f840062f9d26",
+      "created_at": "2025-09-26T17:11:37Z",
+      "updated_at": "2025-09-26T17:11:37Z",
+      "expires_at": "2025-12-25T16:36:17Z",
+      "workflow_run": {
+        "id": 18043698084,
+        "repository_id": 957055748,
+        "head_repository_id": 957055748,
+        "head_branch": "Crowdin",
+        "head_sha": "ac3fd7d984c8ceedbb627e5bfb27d3c3eda05cfb"
+      }
+    }
+  ]
+}
+错误: 无法获取Manager文件的下载链接
+可用的artifacts:
+android12-5.10-lkm
+android13-5.15-lkm
+android13-5.10-lkm
+android14-5.15-lkm
+android14-6.1-lkm
+android15-6.6-lkm
+susfs-aarch64-linux-android
+kpmmgr-aarch64-linux-android
+userscanner-all-linux-android
+ksud-x86_64-linux-android
+ksud-aarch64-linux-android
+ksud-armv7-linux-androideabi
