@@ -126,6 +126,13 @@ jobs:
             exit 1
           fi
 
+      - name: 列出当前目录文件 (调试用)
+        run: |
+          echo "当前目录中的所有文件:"
+          ls -la
+          echo "APK文件:"
+          ls -la *.apk 2>/dev/null || echo "没有找到APK文件"
+
       - name: 上传编译资产
         uses: actions/upload-artifact@v4
         with:
