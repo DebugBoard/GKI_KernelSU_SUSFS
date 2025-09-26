@@ -50,6 +50,11 @@ jobs:
           #- sub_level: "75"
           #  os_patch_level: "2024-05"
           #- sub_level: "78"
+<<<<<<< HEAD
+          #  os_patch_level: "2024-06"
+          #- sub_level: "90"
+          #  os_patch_level: "2024-08"
+=======
           # os_patch_level: "2024-06"
           #- sub_level: "84"
           #  os_patch_level: "2024-07"
@@ -57,6 +62,7 @@ jobs:
           #  os_patch_level: "2024-08"
           #- sub_level: "93"
           #  os_patch_level: "2024-09"
+>>>>>>> f584fc06c201855bfbddff923723b8771b791004
           #- sub_level: "99"
           #  os_patch_level: "2024-10"
           - sub_level: "112"
