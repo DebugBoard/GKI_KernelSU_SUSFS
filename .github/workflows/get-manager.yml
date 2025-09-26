@@ -1,15 +1,13 @@
 name: GetManager
 permissions:
-  contents: write  # Allow writing to repository contents (for pushing tags)
-  actions: read   # Allows triggering actions
-
+  contents: write
+  actions: read
 on:
-  workflow_call: # This allows this workflow to be called from another workflow
+  workflow_call:
     inputs:
       kernelsu_variant:
         required: true
         type: string
-
 jobs:
   get_ksu_manager:
     runs-on: ubuntu-latest
@@ -18,7 +16,6 @@ jobs:
       CCACHE_NOHASHDIR: "true"
       CCACHE_HARDLINK: "true"
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: 安装依赖
         run: sudo apt update && sudo apt upgrade -y && sudo apt install -y git curl jq
@@ -30,9 +27,8 @@ jobs:
             git clone https://github.com/KernelSU-Next/KernelSU-Next.git
             cd KernelSU-Next
             KSU_GIT_VERSION=$(git rev-list --count HEAD)
-            # ???
             KSU_VERSION=$((10000 + KSU_GIT_VERSION + 200))
-            echo $KSU_VERSION
+            echo "KSU_VERSION=$KSU_VERSION"
             echo "KSU_VERSION=$KSU_VERSION" >> $GITHUB_ENV
           elif [ "${{ inputs.kernelsu_variant }}" == "SukiSU" ]; then
             echo "This is the SukiSU variant"
@@ -40,14 +36,16 @@ jobs:
             cd SukiSU-Ultra
             KSU_GIT_VERSION=$(git rev-list --count HEAD)
             KSU_VERSION=$((10000 + KSU_GIT_VERSION + 700))
-            echo $KSU_VERSION
+            echo "KSU_VERSION=$KSU_VERSION"
             echo "KSU_VERSION=$KSU_VERSION" >> $GITHUB_ENV
           else
             echo "Unknown variant"
+            exit 1
           fi
 
       - name: 添加 KernelSU
         run: |
+          # Set repository and filename based on variant
           if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
             echo "KernelSU Next..."
             REPO="KernelSU-Next/KernelSU-Next"
@@ -56,28 +54,93 @@ jobs:
             echo "SukiSU..."
             REPO="SukiSU-Ultra/SukiSU-Ultra"
             FILENAME="build-manager.yml"
+          else
+            echo "Unknown variant"
+            exit 1
           fi
-
-          # 获取最新成功构建的 ID
-          BUILD_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/$REPO/actions/workflows/$FILENAME/runs?status=success" | \
-          jq -r '.workflow_runs[0].id')
-          echo 'BUILD_ID=$BUILD_ID'
-          # 获取该构建的 Artifacts
-          ARTIFACTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          
+          echo "Repository: $REPO"
+          echo "Workflow file: $FILENAME"
+          
+          # Get the latest successful build ID with error checking
+          echo "Fetching latest successful workflow run..."
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/$REPO/actions/workflows/$FILENAME/runs?status=success&per_page=1")
+          
+          # Check if API call was successful
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to fetch workflow runs"
+            exit 1
+          fi
+          
+          # Extract BUILD_ID with error checking
+          BUILD_ID=$(echo "$RESPONSE" | jq -r '.workflow_runs[0].id // empty')
+          
+          if [ -z "$BUILD_ID" ] || [ "$BUILD_ID" = "null" ]; then
+            echo "Error: No successful workflow runs found"
+            echo "API Response: $RESPONSE"
+            exit 1
+          fi
+          
+          echo "BUILD_ID: $BUILD_ID"
+          
+          # Get artifacts for the build
+          echo "Fetching artifacts for build ID: $BUILD_ID"
+          ARTIFACTS_RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$REPO/actions/runs/$BUILD_ID/artifacts")
-          echo 'ARTIFACTS=$ARTIFACTS'
-          # 获取 Manager 文件的下载链接
-          if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
-            DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
-          elif [ "${{ inputs.kernelsu_variant }}" == "SukiSU" ]; then
-            DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
+          
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to fetch artifacts"
+            exit 1
           fi
-
-          # 下载 Manager 文件
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip" "$DOWNLOAD_URL"
-          echo "Manager 文件已下载为：${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip"
-          unzip *.zip
+          
+          echo "Artifacts response received"
+          
+          # Extract download URL for Manager artifact
+          DOWNLOAD_URL=$(echo "$ARTIFACTS_RESPONSE" | jq -r '.artifacts[] | select(.name | test("Manager"; "i")) | .archive_download_url // empty')
+          
+          if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
+            echo "Error: No Manager artifact found"
+            echo "Available artifacts:"
+            echo "$ARTIFACTS_RESPONSE" | jq -r '.artifacts[].name'
+            exit 1
+          fi
+          
+          echo "Download URL: $DOWNLOAD_URL"
+          
+          # Download Manager file
+          OUTPUT_FILE="${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip"
+          echo "Downloading Manager file as: $OUTPUT_FILE"
+          
+          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -o "$OUTPUT_FILE" "$DOWNLOAD_URL"
+          
+          if [ $? -ne 0 ]; then
+            echo "Error: Failed to download Manager file"
+            exit 1
+          fi
+          
+          # Verify download
+          if [ ! -f "$OUTPUT_FILE" ]; then
+            echo "Error: Downloaded file not found"
+            exit 1
+          fi
+          
+          FILE_SIZE=$(stat -f%z "$OUTPUT_FILE" 2>/dev/null || stat -c%s "$OUTPUT_FILE" 2>/dev/null || echo "0")
+          echo "Downloaded file size: $FILE_SIZE bytes"
+          
+          if [ "$FILE_SIZE" -eq 0 ]; then
+            echo "Error: Downloaded file is empty"
+            exit 1
+          fi
+          
+          # Unzip the file
+          echo "Extracting archive..."
+          unzip -o "$OUTPUT_FILE"
+          
+          # List extracted files
+          echo "Extracted files:"
+          ls -la *.apk 2>/dev/null || echo "No APK files found"
 
       - name: 上传编译资产
         uses: actions/upload-artifact@v4
