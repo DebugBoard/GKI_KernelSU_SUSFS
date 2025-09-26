@@ -56,28 +56,63 @@ jobs:
             echo "SukiSU..."
             REPO="SukiSU-Ultra/SukiSU-Ultra"
             FILENAME="build-manager.yml"
+          elif [ "${{ inputs.kernelsu_variant }}" == "Official" ]; then
+            echo "Official KernelSU..."
+            REPO="tiann/KernelSU"
+            FILENAME="build-manager.yml"
+          elif [ "${{ inputs.kernelsu_variant }}" == "MKSU" ]; then
+            echo "MKSU..."
+            REPO="xiaoxindada/MKSU"
+            FILENAME="build-manager.yml"
+          else
+            echo "错误: 不支持的KernelSU变体: ${{ inputs.kernelsu_variant }}"
+            exit 1
           fi
+          
+          echo "使用仓库: $REPO"
+          echo "工作流文件: $FILENAME"
 
           # 获取最新成功构建的 ID
           BUILD_ID=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/$REPO/actions/workflows/$FILENAME/runs?status=success" | \
-          jq -r '.workflow_runs[0].id')
-          echo 'BUILD_ID=$BUILD_ID'
+            "https://api.github.com/repos/$REPO/actions/workflows/$FILENAME/runs?status=success" | \
+            jq -r '.workflow_runs[0].id')
+          echo "BUILD_ID=$BUILD_ID"
+          
+          # 检查BUILD_ID是否为空或null
+          if [ "$BUILD_ID" == "null" ] || [ -z "$BUILD_ID" ]; then
+            echo "错误: 无法获取构建ID，可能没有成功的构建记录"
+            exit 1
+          fi
+          
           # 获取该构建的 Artifacts
           ARTIFACTS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/$REPO/actions/runs/$BUILD_ID/artifacts")
-          echo 'ARTIFACTS=$ARTIFACTS'
+          echo "ARTIFACTS=$ARTIFACTS"
           # 获取 Manager 文件的下载链接
           if [ "${{ inputs.kernelsu_variant }}" == "Next" ]; then
             DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
           elif [ "${{ inputs.kernelsu_variant }}" == "SukiSU" ]; then
             DOWNLOAD_URL=$(echo "$ARTIFACTS" | jq -r '.artifacts[] | select(.name | contains("Manager")) | .archive_download_url')
           fi
+          
+          # 检查DOWNLOAD_URL是否为空或null
+          if [ "$DOWNLOAD_URL" == "null" ] || [ -z "$DOWNLOAD_URL" ]; then
+            echo "错误: 无法获取Manager文件的下载链接"
+            echo "可用的artifacts:"
+            echo "$ARTIFACTS" | jq -r '.artifacts[].name'
+            exit 1
+          fi
+          
+          echo "下载链接: $DOWNLOAD_URL"
 
           # 下载 Manager 文件
-          curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip" "$DOWNLOAD_URL"
-          echo "Manager 文件已下载为：${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip"
-          unzip *.zip
+          if curl -L -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -o "${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip" "$DOWNLOAD_URL"; then
+            echo "Manager 文件已下载为：${{ inputs.kernelsu_variant }}-管理器(${{ env.KSU_VERSION }}).zip"
+            unzip *.zip
+          else
+            echo "错误: 下载Manager文件失败"
+            exit 1
+          fi
 
       - name: 上传编译资产
         uses: actions/upload-artifact@v4
