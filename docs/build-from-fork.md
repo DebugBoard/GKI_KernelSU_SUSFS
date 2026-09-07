@@ -43,6 +43,17 @@ The workflow currently exposes these families:
 | `6.6.x-android15` | Android 15 | 6.6 |
 | `6.12.x-android16` | Android 16 | 6.12 |
 
+The **Exact kernel version** field builds one specific Linux release and nothing
+else. Enter a full `X.Y.Z` version, such as `6.12.81`:
+
+- The series (`6.12`) selects the family, so **Kernel Version** can stay `All`. Setting it to a family from a different series is rejected before any build starts.
+- The sublevel (`81`) selects the matrix row. If that sublevel ships under several patch dates, the newest one is used; set **OS patch level** to a specific date to pick a different one.
+- The version must exist in the family's config. If it does not, the run fails immediately and lists the sublevels that are available.
+- It cannot select an LTS tip build, because the LTS row has no fixed sublevel. Leave the field empty and set **OS patch level** to `lts` instead.
+
+Leave **Exact kernel version** empty to select builds with **Kernel Version** and
+**OS patch level** as described below.
+
 The **OS patch level** field accepts one of the following:
 
 - A patch date present in the selected family's config, such as `2025-01`.
@@ -50,10 +61,10 @@ The **OS patch level** field accepts one of the following:
 - `lts`, which builds the current tip of that family's configured LTS branch.
 - `All`, which builds every configured row for the selected family.
 
-The matrix files under [`.github/config/`](../.github/config/) are the source of truth for available dates and sublevels. To guarantee one matrix row, select a unique patch date or `lts`; if you use a numeric sublevel, check the config first to confirm it occurs only once.
+The matrix files under [`.github/config/`](../.github/config/) are the source of truth for available dates and sublevels. To guarantee one matrix row, use **Exact kernel version**, or select a unique patch date or `lts`; a numeric sublevel in **OS patch level** builds every matching row.
 
 > [!WARNING]
-> Do not leave **Kernel Version**, **OS patch level**, and **Root Flavor** set to `All` for a first test. Those defaults fan out across every exposed family, every matching matrix row, and all three root implementations, potentially creating hundreds of kernel jobs.
+> Do not leave **Kernel Version**, **OS patch level**, and **Root Flavor** set to `All` for a first test (setting **Exact kernel version** bounds the first two). Those defaults fan out across every exposed family, every matching matrix row, and all three root implementations, potentially creating hundreds of kernel jobs.
 
 ## 3. Run One Build in the GitHub UI
 
@@ -61,7 +72,7 @@ The matrix files under [`.github/config/`](../.github/config/) are the source of
 2. Select **Build Kernels**.
 3. Select **Run workflow**.
 4. Choose the branch containing your desired changes, normally `main`.
-5. Set a specific **Kernel Version**, **OS patch level**, and **Root Flavor**.
+5. Set a specific **Exact kernel version** (or **Kernel Version** plus **OS patch level**) and **Root Flavor**.
 6. Select **Run workflow**.
 
 Recommended settings for a first build:
@@ -70,8 +81,9 @@ Recommended settings for a first build:
 |---|---|---|
 | Release Type | `Action` | Runs the build without creating a numbered `rN` release. It still replaces the fork's `nightly` prerelease. |
 | Use cache | `false` for the first build | Avoids creating cache releases while testing the fork. Enable it later to speed up repeat builds. |
-| Kernel Version | One exact family | Prevents an all-family fan-out. |
-| OS patch level | One unique date or `lts` | Selects one matrix row. A numeric sublevel can match multiple dates. |
+| Exact kernel version | One full version such as `6.12.81` | Builds exactly that Linux release and nothing else. |
+| Kernel Version | One exact family, or `All` when an exact version is set | Prevents an all-family fan-out. |
+| OS patch level | One unique date or `lts` | Selects one matrix row when no exact version is set. A numeric sublevel can match multiple dates. |
 | Kernel Branding | Your short brand name | Changes the kernel's local version string. |
 | Commit mode | `verified` | Uses the project's verified component pins where pins are supported. |
 | Root Flavor | One implementation | Produces one kernel instead of KernelSU-Next, KernelSU, and ReSukiSU builds. |
@@ -123,6 +135,20 @@ gh workflow run main.yml \
   -f release_type=Action \
   -f kernel_build_version=6.6.x-android15 \
   -f os_patch_level=lts \
+  -f brand_name=MyKernel \
+  -f commit_mode=verified \
+  -f root_flavor=KernelSU \
+  -f use_cache=false
+```
+
+Android 16 / Linux 6.12.81 exactly:
+
+```bash
+gh workflow run main.yml \
+  -R YOUR_USERNAME/GKI_KernelSU_SUSFS \
+  --ref main \
+  -f release_type=Action \
+  -f kernel_exact_version=6.12.81 \
   -f brand_name=MyKernel \
   -f commit_mode=verified \
   -f root_flavor=KernelSU \
@@ -258,7 +284,7 @@ Open the selected family's JSON file under [`.github/config/`](../.github/config
 
 ### The workflow creates more jobs than expected
 
-Cancel the run and check all three selectors. Use one **Kernel Version**, one **OS patch level**, and one **Root Flavor** rather than `All`.
+Cancel the run and check the selectors. Set **Exact kernel version** (or one **Kernel Version** plus one **OS patch level**) and one **Root Flavor** rather than `All`.
 
 ### Release or cache steps fail with a permission error
 

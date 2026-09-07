@@ -71,6 +71,11 @@ on:
         required: false
         type: string
         default: ""
+      exact_sublevel:
+        description: "Sublevel of an exact kernel version request (e.g. 81 for 6.12.81); empty = no exact pin"
+        required: false
+        type: string
+        default: ""
       variant:
         description: "Artifact variant label"
         required: false
@@ -91,6 +96,7 @@ jobs:
         shell: bash
         env:
           INPUT_OS_PATCH_LEVEL: ${{ inputs.os_patch_level }}
+          INPUT_EXACT_SUBLEVEL: ${{ inputs.exact_sublevel }}
         run: |
           if [ ! -f "${{ inputs.config_file }}" ]; then
             echo "Error: Config file not found: ${{ inputs.config_file }}"
@@ -98,6 +104,11 @@ jobs:
           fi
 
           CONFIG_JSON=$(cat "${{ inputs.config_file }}" | jq -c .)
+
+          SELECTED_PATCH_LEVEL="$(printf '%s' "$INPUT_OS_PATCH_LEVEL" | tr '[:upper:]' '[:lower:]')"
+          if [ "$SELECTED_PATCH_LEVEL" = "all" ]; then
+            SELECTED_PATCH_LEVEL=""
+          fi
 
           # Build { "include": [ {android_version:..., kernel_version:..., sublevel:..., os_patch_level:..., variant: ...}, ... ] }.
           # An explicit patch-level filter keeps manual validation dispatches bounded.
@@ -135,11 +146,34 @@ jobs:
               )
             }')
 
-          SELECTED_PATCH_LEVEL="$(printf '%s' "$INPUT_OS_PATCH_LEVEL" | tr '[:upper:]' '[:lower:]')"
-          if [ "$SELECTED_PATCH_LEVEL" = "all" ]; then
-            SELECTED_PATCH_LEVEL=""
-          fi
-          if [ -n "$SELECTED_PATCH_LEVEL" ]; then
+          if [ -n "$INPUT_EXACT_SUBLEVEL" ]; then
+            # An exact version request (e.g. 6.12.81) must yield exactly one
+            # kernel, so this path never falls back to a wider match.
+            FINAL=$(jq -c --arg sublevel "$INPUT_EXACT_SUBLEVEL" '
+              {include: [.include[] | select(.sublevel == $sublevel)]}
+            ' <<< "$FINAL")
+            if [ "$(jq '.include | length' <<< "$FINAL")" -eq 0 ]; then
+              echo "Error: sublevel '${INPUT_EXACT_SUBLEVEL}' is not listed in ${{ inputs.config_file }}." >&2
+              exit 1
+            fi
+            if [ -n "$SELECTED_PATCH_LEVEL" ]; then
+              # An explicit patch date disambiguates a sublevel shipped under
+              # several dates.
+              FINAL=$(jq -c --arg patch_level "$SELECTED_PATCH_LEVEL" '
+                {include: [.include[] | select(.os_patch_level == $patch_level)]}
+              ' <<< "$FINAL")
+              if [ "$(jq '.include | length' <<< "$FINAL")" -eq 0 ]; then
+                echo "Error: sublevel '${INPUT_EXACT_SUBLEVEL}' has no patch level '${SELECTED_PATCH_LEVEL}' in ${{ inputs.config_file }}." >&2
+                exit 1
+              fi
+            else
+              # Otherwise keep the newest patch date per variant; dates are
+              # YYYY-MM, so a lexical max is a chronological max.
+              FINAL=$(jq -c '
+                {include: [.include | group_by(.variant)[] | max_by(.os_patch_level)]}
+              ' <<< "$FINAL")
+            fi
+          elif [ -n "$SELECTED_PATCH_LEVEL" ]; then
             FULL_FINAL="$FINAL"
             FINAL=$(jq -c --arg patch_level "$SELECTED_PATCH_LEVEL" '
               {include: [.include[] | select(.os_patch_level == $patch_level)]}
@@ -156,6 +190,7 @@ jobs:
             exit 1
           fi
 
+          jq -r '.include[] | "Selected \(.kernel_version).\(.sublevel)-\(.android_version) patch \(.os_patch_level) (\(.variant))"' <<< "$FINAL"
           echo "matrix=$FINAL" >> "$GITHUB_OUTPUT"
 
   build:
