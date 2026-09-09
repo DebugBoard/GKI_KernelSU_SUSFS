@@ -16,6 +16,10 @@ inputs:
   sublevel:
     required: true
     type: string
+  expected_sublevel:
+    description: 'Exact sublevel the caller asked for; build fails if the tree differs'
+    required: false
+    default: ""
 outputs:
   file_name:
     value: ${{ steps.extract.outputs.file_name }}
@@ -29,6 +33,7 @@ runs:
       shell: bash
       env:
         INPUT_OS_PATCH_LEVEL: ${{ inputs.os_patch_level }}
+        INPUT_EXPECTED_SUBLEVEL: ${{ inputs.expected_sublevel }}
       run: |
         set -euo pipefail
 
@@ -51,6 +56,13 @@ runs:
             exit 1
           fi
           SUBLEVEL="$EXTRACTED"
+        fi
+
+        # An exact release was requested (kernel_release). The branch tip moves,
+        # so refuse to publish an artifact labelled as something it is not.
+        if [ -n "${INPUT_EXPECTED_SUBLEVEL}" ] && [ "$SUBLEVEL" != "${INPUT_EXPECTED_SUBLEVEL}" ]; then
+          echo "Requested ${{ inputs.kernel_version }}.${INPUT_EXPECTED_SUBLEVEL}, but ${{ inputs.android_version }}-${{ inputs.kernel_version }}-${{ inputs.os_patch_level }} is at ${{ inputs.kernel_version }}.${SUBLEVEL}." >&2
+          exit 1
         fi
 
         FILE_NAME="${{ inputs.kernel_version }}.${SUBLEVEL}-${{ inputs.android_version }}-${{ inputs.os_patch_level }}"

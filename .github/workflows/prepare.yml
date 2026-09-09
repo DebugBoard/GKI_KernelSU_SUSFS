@@ -71,6 +71,11 @@ on:
         required: false
         type: string
         default: ""
+      kernel_release:
+        description: "Exact kernel release to build (e.g. 6.12.81). Takes precedence over os_patch_level."
+        required: false
+        type: string
+        default: ""
       variant:
         description: "Artifact variant label"
         required: false
@@ -91,6 +96,7 @@ jobs:
         shell: bash
         env:
           INPUT_OS_PATCH_LEVEL: ${{ inputs.os_patch_level }}
+          INPUT_KERNEL_RELEASE: ${{ inputs.kernel_release }}
         run: |
           if [ ! -f "${{ inputs.config_file }}" ]; then
             echo "Error: Config file not found: ${{ inputs.config_file }}"
@@ -135,11 +141,58 @@ jobs:
               )
             }')
 
+          # Every target carries expected_sublevel: non-empty only when the exact
+          # release was requested but has to be built off the rolling LTS branch,
+          # where the sublevel is not known until the Makefile is read.
+          FINAL=$(jq -c '{include: [.include[] | .expected_sublevel = ""]}' <<< "$FINAL")
+
+          KERNEL_RELEASE="$(printf '%s' "$INPUT_KERNEL_RELEASE" | tr -d '[:space:]')"
           SELECTED_PATCH_LEVEL="$(printf '%s' "$INPUT_OS_PATCH_LEVEL" | tr '[:upper:]' '[:lower:]')"
           if [ "$SELECTED_PATCH_LEVEL" = "all" ]; then
             SELECTED_PATCH_LEVEL=""
           fi
-          if [ -n "$SELECTED_PATCH_LEVEL" ]; then
+
+          if [ -n "$KERNEL_RELEASE" ]; then
+            # Exact release (e.g. 6.12.81) wins over the patch-level filter.
+            if ! [[ "$KERNEL_RELEASE" =~ ^([0-9]+\.[0-9]+)\.([0-9]+)$ ]]; then
+              echo "Error: kernel_release must look like 6.12.81 (got '${KERNEL_RELEASE}')." >&2
+              exit 1
+            fi
+            REQUESTED_KERNEL="${BASH_REMATCH[1]}"
+            REQUESTED_SUBLEVEL="${BASH_REMATCH[2]}"
+            CONFIG_KERNEL="$(jq -r '.version | split("-")[1]' <<< "$CONFIG_JSON")"
+            if [ "$REQUESTED_KERNEL" != "$CONFIG_KERNEL" ]; then
+              echo "Error: ${KERNEL_RELEASE} is not on the ${CONFIG_KERNEL} line (${{ inputs.config_file }})." >&2
+              exit 1
+            fi
+            if [ -n "$SELECTED_PATCH_LEVEL" ]; then
+              echo "Note: kernel_release=${KERNEL_RELEASE} overrides os_patch_level=${SELECTED_PATCH_LEVEL}."
+            fi
+
+            MATCHED=$(jq -c --arg sublevel "$REQUESTED_SUBLEVEL" '
+              {include: [.include[] | select(.sublevel == $sublevel)]}
+            ' <<< "$FINAL")
+            if [ "$(jq '.include | length' <<< "$MATCHED")" -gt 0 ]; then
+              echo "Building ${KERNEL_RELEASE} from its pinned patch-level branch(es)."
+              FINAL="$MATCHED"
+            else
+              # Not a pinned sublevel: build it off the rolling LTS branch and
+              # fail early in the build if that branch is not at this release.
+              MATCHED=$(jq -c --arg sublevel "$REQUESTED_SUBLEVEL" '
+                {include: [.include[] | select(.os_patch_level == "lts") | .expected_sublevel = $sublevel]}
+              ' <<< "$FINAL")
+              if [ "$(jq '.include | length' <<< "$MATCHED")" -eq 0 ]; then
+                echo "Error: ${KERNEL_RELEASE} is not a pinned release and ${CONFIG_KERNEL} has no LTS target." >&2
+                echo "Available releases:" >&2
+                jq -r --arg kv "$CONFIG_KERNEL" \
+                  '.include[] | select(.sublevel != "X") | "  \($kv).\(.sublevel) (\(.os_patch_level))"' \
+                  <<< "$FINAL" | sort -u >&2
+                exit 1
+              fi
+              echo "${KERNEL_RELEASE} is not a pinned release; building from the LTS branch and verifying SUBLEVEL == ${REQUESTED_SUBLEVEL}."
+              FINAL="$MATCHED"
+            fi
+          elif [ -n "$SELECTED_PATCH_LEVEL" ]; then
             FULL_FINAL="$FINAL"
             FINAL=$(jq -c --arg patch_level "$SELECTED_PATCH_LEVEL" '
               {include: [.include[] | select(.os_patch_level == $patch_level)]}
@@ -169,6 +222,7 @@ jobs:
       android_version: ${{ matrix.android_version }}
       kernel_version: ${{ matrix.kernel_version }}
       sublevel: ${{ matrix.sublevel }}
+      expected_sublevel: ${{ matrix.expected_sublevel }}
       os_patch_level: ${{ matrix.os_patch_level }}
       variant: ${{ matrix.variant }}
       feature_set: ${{ inputs.feature_set }}

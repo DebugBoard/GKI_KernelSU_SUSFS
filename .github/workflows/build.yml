@@ -18,6 +18,11 @@ on:
       sublevel:
         required: true
         type: string
+      expected_sublevel:
+        description: "When set, fail the build unless the tree's SUBLEVEL matches (used for exact-release builds off the LTS branch)"
+        required: false
+        type: string
+        default: ""
       os_patch_level:
         required: true
         type: string
@@ -75,7 +80,7 @@ on:
 
 jobs:
   build-gki:
-    name: "${{ inputs.kernel_version }}.${{ inputs.sublevel }}-${{ inputs.android_version }}-${{ inputs.os_patch_level }} (${{ inputs.variant }})"
+    name: "${{ inputs.kernel_version }}.${{ inputs.expected_sublevel != '' && inputs.expected_sublevel || inputs.sublevel }}-${{ inputs.android_version }}-${{ inputs.os_patch_level }} (${{ inputs.variant }})"
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
@@ -158,6 +163,7 @@ jobs:
         android_version: ${{ inputs.android_version }}
         kernel_version: ${{ inputs.kernel_version }}
         sublevel: ${{ inputs.sublevel }}
+        expected_sublevel: ${{ inputs.expected_sublevel }}
         os_patch_level: ${{ inputs.os_patch_level }}
         variant: ${{ inputs.variant }}
 
