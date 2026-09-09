@@ -45,7 +45,9 @@ runs:
         echo "${{ github.workspace }}/git-repo" >> "$GITHUB_PATH"
 
         if [ -d "${{ github.workspace }}/kernel_patches" ]; then rm -rf "${{ github.workspace }}/kernel_patches"; fi
-        retry git clone https://github.com/WildKernels/kernel_patches.git "${{ github.workspace }}/kernel_patches"
+        # Only the tree is used (patch files), never the history. A pinned
+        # commit is fetched by SHA below, which works on a shallow clone.
+        retry git clone --depth=1 --single-branch https://github.com/WildKernels/kernel_patches.git "${{ github.workspace }}/kernel_patches"
         if [ -n "${{ inputs.kernel_patches_commit }}" ]; then
           git -C "${{ github.workspace }}/kernel_patches" fetch --depth=1 origin "${{ inputs.kernel_patches_commit }}"
           git -C "${{ github.workspace }}/kernel_patches" checkout "${{ inputs.kernel_patches_commit }}"
@@ -53,7 +55,7 @@ runs:
         fi
 
         if [ -d "${{ github.workspace }}/AnyKernel3" ]; then rm -rf "${{ github.workspace }}/AnyKernel3"; fi
-        retry git clone https://github.com/WildKernels/AnyKernel3.git -b gki-2.0 "${{ github.workspace }}/AnyKernel3"
+        retry git clone --depth=1 --single-branch https://github.com/WildKernels/AnyKernel3.git -b gki-2.0 "${{ github.workspace }}/AnyKernel3"
         if [ -n "${{ inputs.anykernel3_commit }}" ]; then
           git -C "${{ github.workspace }}/AnyKernel3" fetch --depth=1 origin "${{ inputs.anykernel3_commit }}"
           git -C "${{ github.workspace }}/AnyKernel3" checkout "${{ inputs.anykernel3_commit }}"

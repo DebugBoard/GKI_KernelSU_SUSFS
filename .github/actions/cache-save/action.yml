@@ -17,7 +17,7 @@ inputs:
     description: 'GitHub Token'
     required: true
   compression_level:
-    description: 'Compression level (0-9). 0 = No compression, 1 = Fast, 19 = Best.'
+    description: 'zstd compression level (0 = store uncompressed, 1 = fastest, 19 = smallest).'
     required: false
     type: number
     default: 6
@@ -105,18 +105,13 @@ runs:
           DIR_NAME=$(dirname "${{ inputs.cache_path }}")
           BASE_NAME=$(basename "${{ inputs.cache_path }}")
           
-          if [ "${{ inputs.debug }}" = "true" ]; then
-            if [ "${{ inputs.compression_level }}" -eq 0 ]; then
-              tar --posix -h -cvf "$FILENAME" -C "$DIR_NAME" "$BASE_NAME"
-            else
-              tar --posix -h -I "zstd -T0 -${{ inputs.compression_level }}" -cvf "$FILENAME" -C "$DIR_NAME" "$BASE_NAME"
-            fi
+          # Listing every file (-v) only to discard it costs real time on a
+          # cache with hundreds of thousands of entries; keep it for debug runs.
+          if [ "${{ inputs.debug }}" = "true" ]; then TAR_CREATE="-cvf"; else TAR_CREATE="-cf"; fi
+          if [ "${{ inputs.compression_level }}" -eq 0 ]; then
+            tar --posix -h "$TAR_CREATE" "$FILENAME" -C "$DIR_NAME" "$BASE_NAME"
           else
-            if [ "${{ inputs.compression_level }}" -eq 0 ]; then
-              tar --posix -h -cvf "$FILENAME" -C "$DIR_NAME" "$BASE_NAME" > /dev/null 2>&1
-            else
-              tar --posix -h -I "zstd -T0 -${{ inputs.compression_level }}" -cvf "$FILENAME" -C "$DIR_NAME" "$BASE_NAME" > /dev/null 2>&1
-            fi
+            tar --posix -h -I "zstd -T0 -${{ inputs.compression_level }}" "$TAR_CREATE" "$FILENAME" -C "$DIR_NAME" "$BASE_NAME"
           fi
           
           FILE_SIZE=$(stat -c%s "$FILENAME")

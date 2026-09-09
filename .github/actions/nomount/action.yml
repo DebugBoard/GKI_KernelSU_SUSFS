@@ -62,7 +62,8 @@ runs:
           # read tree"). Fetching by SHA works even for orphaned commits;
           # setup.sh then reuses the clone and its checkout succeeds.
           if [ ! -d "$KERNEL_DIR/NoMount" ]; then
-            git clone --no-checkout https://github.com/maxsteeel/nomount.git "$KERNEL_DIR/NoMount"
+            git init --quiet "$KERNEL_DIR/NoMount"
+            git -C "$KERNEL_DIR/NoMount" remote add origin https://github.com/maxsteeel/nomount.git
           fi
           git -C "$KERNEL_DIR/NoMount" fetch --depth=1 origin "$requested_commit"
           git -C "$KERNEL_DIR/NoMount" checkout --detach --quiet "$requested_commit"

@@ -38,7 +38,8 @@ runs:
         source_dir="${RUNNER_TEMP}/nomount-module-source"
         module_dir="${RUNNER_TEMP}/nomount-metamodule"
         module_zip="${RUNNER_TEMP}/NoMount-${expected_commit}.zip"
-        git clone --no-checkout https://github.com/maxsteeel/nomount.git "$source_dir"
+        git init --quiet "$source_dir"
+        git -C "$source_dir" remote add origin https://github.com/maxsteeel/nomount.git
         git -C "$source_dir" fetch --depth=1 origin "$expected_commit"
         git -C "$source_dir" checkout --detach "$expected_commit"
         actual_commit="$(git -C "$source_dir" rev-parse HEAD)"
