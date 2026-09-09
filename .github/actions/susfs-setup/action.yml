@@ -34,7 +34,9 @@ runs:
 
         echo "Preparing SUSFS for branch: $SUSFS_BRANCH"
         echo "Cloning latest from $SUSFS_BRANCH..."
-        retry git clone "$SUSFS_REPO" -b "$SUSFS_BRANCH" susfs4ksu
+        # --single-branch: only gki-* branch in use is needed; the pinned commit
+        # below is always reachable from it.
+        retry git clone --single-branch "$SUSFS_REPO" -b "$SUSFS_BRANCH" susfs4ksu
 
         if [ -n "${{ inputs.susfs_commit }}" ]; then
           echo "Checking out SUSFS commit: ${{ inputs.susfs_commit }}"

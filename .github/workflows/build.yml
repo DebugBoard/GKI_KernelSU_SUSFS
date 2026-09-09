@@ -18,6 +18,11 @@ on:
       sublevel:
         required: true
         type: string
+      expected_sublevel:
+        description: "When set, fail the build unless the tree's SUBLEVEL matches (used for exact-release builds off the LTS branch)"
+        required: false
+        type: string
+        default: ""
       os_patch_level:
         required: true
         type: string
@@ -75,7 +80,7 @@ on:
 
 jobs:
   build-gki:
-    name: "${{ inputs.kernel_version }}.${{ inputs.sublevel }}-${{ inputs.android_version }}-${{ inputs.os_patch_level }} (${{ inputs.variant }})"
+    name: "${{ inputs.kernel_version }}.${{ inputs.expected_sublevel != '' && inputs.expected_sublevel || inputs.sublevel }}-${{ inputs.android_version }}-${{ inputs.os_patch_level }} (${{ inputs.variant }})"
     runs-on: ubuntu-latest
     timeout-minutes: 120
 
@@ -158,6 +163,7 @@ jobs:
         android_version: ${{ inputs.android_version }}
         kernel_version: ${{ inputs.kernel_version }}
         sublevel: ${{ inputs.sublevel }}
+        expected_sublevel: ${{ inputs.expected_sublevel }}
         os_patch_level: ${{ inputs.os_patch_level }}
         variant: ${{ inputs.variant }}
 
@@ -221,7 +227,16 @@ jobs:
         KVER="${{ inputs.kernel_version }}"
         if [ "$(printf '%s\n' "6.6" "$KVER" | sort -V | head -n1)" = "6.6" ]; then
           echo "[*] KVER $KVER >= 6.6, patching selinux_hide.c (all flavors/branches)"
-          for f in $(find "${{ github.workspace }}" -name selinux_hide.c 2>/dev/null); do
+          # Search only the trees that can carry selinux_hide.c. Scanning the
+          # whole workspace also walks the synced kernel manifest (.repo plus
+          # the clang prebuilts), which is tens of GB of pointless I/O.
+          SEARCH_DIRS=()
+          for d in kernel/KernelSU kernel/KernelSU-Next kernel/ReSukiSU \
+                   kernel/common/security kernel/common/drivers \
+                   kernel_patches susfs4ksu; do
+            [ -d "${{ github.workspace }}/$d" ] && SEARCH_DIRS+=("${{ github.workspace }}/$d")
+          done
+          for f in $([ "${#SEARCH_DIRS[@]}" -gt 0 ] && find "${SEARCH_DIRS[@]}" -name selinux_hide.c 2>/dev/null); do
             # After SUSFS 10_enable (kernelsu only) the declaration becomes
             #   extern void security_dump_masked_av_fn(...)   (a function)
             #   if (func) / if (func != NULL) both trigger -Werror:
@@ -491,7 +506,9 @@ jobs:
         cache_path: /home/runner/.ccache
         cache_key: ${{ inputs.android_version }}-${{ inputs.kernel_version }}.${{ steps.extract.outputs.sublevel }}-${{ inputs.os_patch_level }}-${{ inputs.variant }}
         cache_bucket: "ccache-cache-${{ inputs.version }}-${{ inputs.variant }}"
-        compression_level: 9
+        # ccache already stores its objects zstd-compressed, so a higher level
+        # here costs CPU for no measurable size reduction.
+        compression_level: 3
         github_token: ${{ github.token }}
 
     - name: Save bazel-cache
@@ -502,7 +519,9 @@ jobs:
         cache_path: /home/runner/.cache/bazel
         cache_key: ${{ inputs.android_version }}-${{ inputs.kernel_version }}.${{ steps.extract.outputs.sublevel }}-${{ inputs.os_patch_level }}-${{ inputs.variant }}
         cache_bucket: "bazel-cache-${{ inputs.version }}-${{ inputs.variant }}"
-        compression_level: 9
+        # zstd's default level: roughly half the compression time of -9 on a
+        # multi-GB disk cache for a few percent more upload.
+        compression_level: 6
         github_token: ${{ github.token }}
 
     - name: Build Bypass Kernel

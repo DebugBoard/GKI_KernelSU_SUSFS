@@ -71,7 +71,9 @@ runs:
           exit 1
         fi
 
-        git clone --no-checkout "$repo" "$directory"
+        # Blobless clone: the commit/tag graph is still needed for the
+        # `git describe` below, but only the pinned tree's blobs get fetched.
+        git clone --filter=blob:none --no-checkout "$repo" "$directory"
         git -C "$directory" fetch --depth=1 origin "$expected_commit"
         git -C "$directory" checkout --detach "$expected_commit"
         actual_commit="$(git -C "$directory" rev-parse HEAD)"

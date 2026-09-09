@@ -52,6 +52,14 @@ The **OS patch level** field accepts one of the following:
 
 The matrix files under [`.github/config/`](../.github/config/) are the source of truth for available dates and sublevels. To guarantee one matrix row, select a unique patch date or `lts`; if you use a numeric sublevel, check the config first to confirm it occurs only once.
 
+### Declaring an exact release
+
+The **Kernel release** field takes a full `MAJOR.MINOR.SUBLEVEL` release, such as `6.12.81`. When set it takes precedence over **OS patch level**, and only the family matching its `MAJOR.MINOR` is built — the other families are skipped even when **Kernel Version** is `All`.
+
+- If the sublevel is pinned in that family's config, the build uses the patch-date branch that carries it (`6.12.81` builds `common-android16-6.12-2026-06`).
+- If it is not pinned, the build falls back to that family's LTS branch and verifies the `SUBLEVEL` read from the synced Makefile. The build fails early, before compiling, when the LTS branch is at a different release — so an artifact is never labelled with a release it does not contain.
+- `5.10.x` is exposed under both Android 12 and Android 13. With **Kernel Version** set to `All`, a `5.10.*` release builds both; select one family to build just one.
+
 > [!WARNING]
 > Do not leave **Kernel Version**, **OS patch level**, and **Root Flavor** set to `All` for a first test. Those defaults fan out across every exposed family, every matching matrix row, and all three root implementations, potentially creating hundreds of kernel jobs.
 
@@ -72,6 +80,7 @@ Recommended settings for a first build:
 | Use cache | `false` for the first build | Avoids creating cache releases while testing the fork. Enable it later to speed up repeat builds. |
 | Kernel Version | One exact family | Prevents an all-family fan-out. |
 | OS patch level | One unique date or `lts` | Selects one matrix row. A numeric sublevel can match multiple dates. |
+| Kernel release | Empty, or one exact release such as `6.12.81` | Overrides **OS patch level** and builds only that release. |
 | Kernel Branding | Your short brand name | Changes the kernel's local version string. |
 | Commit mode | `verified` | Uses the project's verified component pins where pins are supported. |
 | Root Flavor | One implementation | Produces one kernel instead of KernelSU-Next, KernelSU, and ReSukiSU builds. |
@@ -92,6 +101,23 @@ Use:
 | Root Flavor | `KernelSU` |
 
 The workflow syncs `common-android15-6.6-lts` and reads the actual numeric `SUBLEVEL` from the synced kernel Makefile. Because that branch moves, a later LTS build can produce a newer sublevel.
+
+### Example: Exactly Linux 6.12.81
+
+Use:
+
+| Input | Value |
+|---|---|
+| Kernel Version | `All` or `6.12.x-android16` |
+| Kernel release | `6.12.81` |
+| Commit mode | `verified` |
+| Root Flavor | `KernelSU` |
+
+The expected artifact prefix is:
+
+```text
+6.12.81-android16-2026-06-KernelSU
+```
 
 ### Example: Android 14 / Linux 6.1.118
 
@@ -123,6 +149,20 @@ gh workflow run main.yml \
   -f release_type=Action \
   -f kernel_build_version=6.6.x-android15 \
   -f os_patch_level=lts \
+  -f brand_name=MyKernel \
+  -f commit_mode=verified \
+  -f root_flavor=KernelSU \
+  -f use_cache=false
+```
+
+Exactly Linux 6.12.81:
+
+```bash
+gh workflow run main.yml \
+  -R YOUR_USERNAME/GKI_KernelSU_SUSFS \
+  --ref main \
+  -f release_type=Action \
+  -f kernel_release=6.12.81 \
   -f brand_name=MyKernel \
   -f commit_mode=verified \
   -f root_flavor=KernelSU \

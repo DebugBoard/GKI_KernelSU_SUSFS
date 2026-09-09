@@ -15,7 +15,11 @@ runs:
         CONFIG_DIR="${{ github.workspace }}/kernel"
         REJECTS_DIR="${{ github.workspace }}/patch-rejects"
         mkdir -p "$REJECTS_DIR"
-        mapfile -t REJS < <(find "$CONFIG_DIR" -type f -name '*.rej')
+        # Patches only ever touch the checked-out kernel/root trees. Skipping
+        # .repo and the toolchain prebuilts keeps this off tens of GB of files.
+        mapfile -t REJS < <(find "$CONFIG_DIR" \
+          \( -name .repo -o -name prebuilts -o -name out \) -prune -o \
+          -type f -name '*.rej' -print)
         FILTERED_REJS=()
 
         for REJ in "${REJS[@]}"; do
